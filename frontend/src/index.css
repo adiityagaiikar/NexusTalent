@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+body {
+  background-color: #FAFAFA;
+  color: #111111;
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .animate-in {
+    animation: fade-in-up 0.5s ease-out forwards;
+  }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
