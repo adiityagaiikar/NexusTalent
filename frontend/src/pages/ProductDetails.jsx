@@ -18,8 +18,8 @@ function ProductDetails() {
   const [questionForm, setQuestionForm] = useState(INITIAL_QUESTION);
 
   async function loadProduct() {
-    const response = await api.get(`/api/products/${slug}`);
-    setProduct(response.data);
+    const response = await api.get(`/api/products/slug/${slug}`);
+    setProduct(response.data.data);
   }
 
   useEffect(() => {
@@ -29,14 +29,14 @@ function ProductDetails() {
       try {
         setLoading(true);
         const [productRes, aiRes] = await Promise.all([
-          api.get(`/api/products/${slug}`),
-          api.get(`/api/products/${slug}/ai-insights`),
+          api.get(`/api/products/slug/${slug}`),
+          api.get(`/api/products/slug/${slug}/ai-insights`),
         ]);
 
         if (!mounted) return;
 
-        setProduct(productRes.data);
-        setAiInsights(aiRes.data);
+        setProduct(productRes.data.data);
+        setAiInsights(aiRes.data.data);
       } catch (fetchError) {
         if (!mounted) return;
         setError(fetchError.response?.data?.message || 'Unable to load product details');
@@ -58,7 +58,7 @@ function ProductDetails() {
     setError('');
 
     try {
-      await api.post(`/api/products/${slug}/reviews`, reviewForm);
+      await api.post(`/api/products/slug/${slug}/reviews`, reviewForm);
       await loadProduct();
       setReviewForm(INITIAL_REVIEW);
     } catch (submitError) {
@@ -74,7 +74,7 @@ function ProductDetails() {
     setError('');
 
     try {
-      await api.post(`/api/products/${slug}/questions`, questionForm);
+      await api.post(`/api/products/slug/${slug}/questions`, questionForm);
       await loadProduct();
       setQuestionForm(INITIAL_QUESTION);
     } catch (submitError) {
@@ -100,8 +100,9 @@ function ProductDetails() {
 
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{product.category}</p>
-        <h1 className="text-3xl font-black text-slate-900">{product.name}</h1>
+        <h1 className="text-3xl font-black text-slate-900">{product.title || product.name}</h1>
         <p className="mt-2 text-slate-500 max-w-3xl">{product.description}</p>
+        <p className="mt-3 text-sm font-bold text-slate-700">Price: ${product.price ?? 0}</p>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {product.features.map((feature) => (

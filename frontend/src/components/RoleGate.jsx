@@ -14,7 +14,7 @@ function RoleGate({ allowedRoles }) {
     const role = user?.role;
 
     if (!allowedRoles.includes(role)) {
-      if (role === 'admin' || role === 'employer') {
+      if (role === 'admin' || role === 'employer' || role === 'recruiter') {
         return <Navigate to="/admin/dashboard" replace />;
       }
 

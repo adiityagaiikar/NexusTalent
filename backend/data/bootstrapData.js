@@ -1,25 +1,40 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-async function ensureDefaultUsers() {
-  const usersCount = await User.countDocuments();
-  if (usersCount > 0) return;
+function createReferralCode(prefix) {
+  const safePrefix = String(prefix).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8) || 'user';
+  const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `${safePrefix}-${suffix}`;
+}
 
+async function ensureDefaultUsers() {
   const hashedPassword = await bcrypt.hash('Password@123', 12);
 
-  await User.insertMany([
-    {
-      name: 'Demo Employer',
-      email: 'employer@talentnexus.com',
-      password: hashedPassword,
-      role: 'employer',
-    },
-    {
-      name: 'Demo Student',
-      email: 'student@talentnexus.com',
-      password: hashedPassword,
-      role: 'student',
-    },
+  await Promise.all([
+    User.findOneAndUpdate(
+      { email: 'employer@talentnexus.com' },
+      {
+        $set: {
+          name: 'Demo Employer',
+          password: hashedPassword,
+          role: 'employer',
+          referralCode: createReferralCode('employer'),
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ),
+    User.findOneAndUpdate(
+      { email: 'student@talentnexus.com' },
+      {
+        $set: {
+          name: 'Demo Student',
+          password: hashedPassword,
+          role: 'student',
+          referralCode: createReferralCode('student'),
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ),
   ]);
 }
 

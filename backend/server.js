@@ -3,13 +3,17 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const { bootstrapData } = require('./data/bootstrapData');
+const { sanitizeMiddleware } = require('./middleware/sanitizeMiddleware');
 const User = require('./models/User');
 const authRoutes = require('./routes/authRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const crmRoutes = require('./routes/crmRoutes');
+const userRoutes = require('./routes/userRoutes');
+const blogRoutes = require('./routes/blogRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 const productRoutes = require('./routes/productRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const { trendingProjects } = require('./data/defaultData');
@@ -50,7 +54,7 @@ app.use(
 app.use(express.json({ limit: '1mb' }));
 
 // OWASP Mitigation #1 (NoSQL Injection): strip dangerous Mongo operators.
-app.use(mongoSanitize({ replaceWith: '_' }));
+app.use(sanitizeMiddleware);
 
 // OWASP Mitigation #2 (API Abuse / Brute Force): enforce request caps by IP.
 const authLimiter = rateLimit({
@@ -96,6 +100,11 @@ app.get('/api/data/users/:id', dataLimiter, async (req, res, next) => {
 
 app.use('/api/jobs', jobRoutes);
 app.use('/api/crm', crmRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/blog', blogRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/payments', paymentRoutes);
 

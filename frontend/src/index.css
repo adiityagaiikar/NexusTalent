@@ -1,20 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 
+/* ── Base ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  background-color: #FAFAFA;
-  color: #111111;
-  font-family: system-ui, -apple-system, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   min-height: 100vh;
+  /* subtle indigo/teal radial orbs — lighter than before */
+  background-image:
+    radial-gradient(ellipse at 10% 5%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 15%, rgba(16, 185, 129, 0.05) 0%, transparent 45%);
+}
+
+/* ── Performance ───────────────────────────────────── */
+/* Force GPU-composited layers on animated elements */
+[class*="hover:-translate"],
+[class*="hover:shadow"],
+[class*="transition"],
+[class*="animate-"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ── Animations ────────────────────────────────────── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @layer utilities {
   .animate-in {
-    animation: fade-in-up 0.5s ease-out forwards;
+    animation: fade-in-up 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Glassmorphism panel */
+  .glass-panel {
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.72));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* Enterprise card shadow */
+  .card-shadow {
+    box-shadow: 0 8px 30px rgb(0 0 0 / 0.04);
+  }
+  .card-shadow-md {
+    box-shadow: 0 12px 40px rgb(0 0 0 / 0.08);
+  }
+
+  /* High-match ring */
+  .high-match-glow {
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.25), 0 8px 24px rgba(16, 185, 129, 0.12);
+  }
+
+  /* Scrollbar hide */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
-@keyframes fade-in-up {
-  0% { opacity: 0; transform: translateY(15px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* ── Custom scrollbar (non-hidden areas) ───────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ── Range input accent ────────────────────────────── */
+input[type="range"] {
+  accent-color: #4f46e5;
 }

@@ -1,6 +1,15 @@
 const Product = require('../models/Product');
 const { products: defaultProducts } = require('../data/defaultData');
 
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
 async function ensureProducts() {
   const count = await Product.countDocuments();
   if (count === 0) {
@@ -37,18 +46,80 @@ function createAiSummary(product) {
 async function getProducts(req, res, next) {
   try {
     await ensureProducts();
-    const products = await Product.find({}, {
-      name: 1,
-      slug: 1,
-      category: 1,
-      shortDescription: 1,
-      rating: 1,
-      reviewsCount: 1,
-      features: 1,
-    }).sort({ rating: -1, createdAt: -1 });
+    const products = await Product.find(
+      {},
+      {
+        title: 1,
+        name: 1,
+        slug: 1,
+        category: 1,
+        shortDescription: 1,
+        description: 1,
+        price: 1,
+        image: 1,
+        rating: 1,
+        reviewsCount: 1,
+        features: 1,
+        createdAt: 1,
+      }
+    ).sort({ rating: -1, createdAt: -1 });
 
-    return res.status(200).json(products);
+    return res.status(200).json({ message: 'Products fetched successfully', data: products });
   } catch (error) {
+    console.error('getProducts error:', error);
+    return next(error);
+  }
+}
+
+async function createProduct(req, res, next) {
+  try {
+    const { title, description, price, category, image, shortDescription, features } = req.body;
+
+    if (!title || !description || typeof price !== 'number' || !category) {
+      return res.status(400).json({
+        message: 'title, description, price (number), and category are required',
+      });
+    }
+
+    if (price < 0) {
+      return res.status(400).json({ message: 'price must be greater than or equal to 0' });
+    }
+
+    const slug = slugify(title);
+    const existing = await Product.findOne({ slug });
+    if (existing) {
+      return res.status(409).json({ message: 'Product with similar title already exists' });
+    }
+
+    const product = await Product.create({
+      title: String(title).trim(),
+      name: String(title).trim(),
+      slug,
+      description: String(description).trim(),
+      shortDescription: String(shortDescription || description).trim().slice(0, 220),
+      price,
+      category: String(category).trim(),
+      image: String(image || '').trim(),
+      features: Array.isArray(features) ? features.map((item) => String(item).trim()).filter(Boolean) : [],
+    });
+
+    return res.status(201).json({ message: 'Product created successfully', data: product });
+  } catch (error) {
+    console.error('createProduct error:', error);
+    return next(error);
+  }
+}
+
+async function getProductById(req, res, next) {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    return res.status(200).json({ message: 'Product fetched successfully', data: product });
+  } catch (error) {
+    console.error('getProductById error:', error);
     return next(error);
   }
 }
@@ -62,8 +133,9 @@ async function getProductBySlug(req, res, next) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    return res.status(200).json(product);
+    return res.status(200).json({ message: 'Product fetched successfully', data: product });
   } catch (error) {
+    console.error('getProductBySlug error:', error);
     return next(error);
   }
 }
@@ -103,6 +175,7 @@ async function addReview(req, res, next) {
       reviews: product.reviews,
     });
   } catch (error) {
+    console.error('addReview error:', error);
     return next(error);
   }
 }
@@ -133,6 +206,7 @@ async function addQuestion(req, res, next) {
       qna: product.qna,
     });
   } catch (error) {
+    console.error('addQuestion error:', error);
     return next(error);
   }
 }
@@ -144,14 +218,17 @@ async function getAiInsights(req, res, next) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    return res.status(200).json(createAiSummary(product));
+    return res.status(200).json({ message: 'AI insights generated', data: createAiSummary(product) });
   } catch (error) {
+    console.error('getAiInsights error:', error);
     return next(error);
   }
 }
 
 module.exports = {
   getProducts,
+  createProduct,
+  getProductById,
   getProductBySlug,
   addReview,
   addQuestion,

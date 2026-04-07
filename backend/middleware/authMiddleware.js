@@ -30,6 +30,21 @@ async function protect(req, res, next) {
   }
 }
 
+function authorizeRoles(...allowedRoles) {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized: Missing user context' });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: 'Forbidden: insufficient permissions' });
+    }
+
+    return next();
+  };
+}
+
 module.exports = {
   protect,
+  authorizeRoles,
 };

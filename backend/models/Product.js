@@ -23,8 +23,11 @@ const qnaSchema = new mongoose.Schema(
 const productSchema = new mongoose.Schema(
   {
     slug: { type: String, required: true, unique: true, trim: true },
-    name: { type: String, required: true, trim: true, maxlength: 120 },
+    title: { type: String, required: true, trim: true, maxlength: 120 },
+    name: { type: String, trim: true, maxlength: 120 },
     category: { type: String, required: true, trim: true, maxlength: 80 },
+    price: { type: Number, required: true, min: 0 },
+    image: { type: String, trim: true, default: '' },
     shortDescription: { type: String, required: true, trim: true, maxlength: 220 },
     description: { type: String, required: true, trim: true, maxlength: 1200 },
     features: { type: [String], default: [] },
@@ -38,5 +41,15 @@ const productSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+
+productSchema.pre('validate', function syncLegacyName(next) {
+  if (!this.name && this.title) {
+    this.name = this.title;
+  }
+  if (!this.title && this.name) {
+    this.title = this.name;
+  }
+  next();
+});
 
 module.exports = mongoose.model('Product', productSchema);

@@ -10,25 +10,11 @@ import { auth } from '../firebase';
 const LOCAL_CREDENTIALS = {
   admin: {
     email: 'admin@talentnexus.com',
-    password: 'Admin@123',
-    user: {
-      id: 'local-admin',
-      name: 'Demo Admin',
-      email: 'admin@talentnexus.com',
-      role: 'admin',
-    },
-    token: 'local-admin-token',
+    password: 'Password@123',
   },
   student: {
     email: 'student@talentnexus.com',
-    password: 'Student@123',
-    user: {
-      id: 'local-student',
-      name: 'Demo Student',
-      email: 'student@talentnexus.com',
-      role: 'student',
-    },
-    token: 'local-student-token',
+    password: 'Password@123',
   },
 };
 
@@ -40,7 +26,7 @@ function Login() {
   const [error, setError] = useState('');
 
   const redirectByRole = (role) => {
-    if (role === 'admin' || role === 'employer') {
+    if (role === 'admin' || role === 'employer' || role === 'recruiter') {
       navigate('/admin/dashboard', { replace: true });
       return;
     }
@@ -53,9 +39,26 @@ function Login() {
     redirectByRole(user.role);
   };
 
-  const handleDemoLogin = (portal) => {
+  const handleDemoLogin = async (portal) => {
     setError('');
-    persistAuth(LOCAL_CREDENTIALS[portal]);
+    setLoading(true);
+
+    try {
+      const credentials = LOCAL_CREDENTIALS[portal];
+      const response = await api.post('/api/auth/login', {
+        email: credentials.email,
+        password: credentials.password,
+      });
+
+      persistAuth({
+        token: response.data.token,
+        user: response.data.user,
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Demo login failed. Ensure backend is running and seeded.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // NEW: Firebase Google Login Handler
@@ -90,25 +93,6 @@ function Login() {
     setLoading(true);
     setError('');
 
-    const isLocalAdmin =
-      email.trim().toLowerCase() === LOCAL_CREDENTIALS.admin.email &&
-      password === LOCAL_CREDENTIALS.admin.password;
-    const isLocalStudent =
-      email.trim().toLowerCase() === LOCAL_CREDENTIALS.student.email &&
-      password === LOCAL_CREDENTIALS.student.password;
-
-    if (isLocalAdmin) {
-      persistAuth(LOCAL_CREDENTIALS.admin);
-      setLoading(false);
-      return;
-    }
-
-    if (isLocalStudent) {
-      persistAuth(LOCAL_CREDENTIALS.student);
-      setLoading(false);
-      return;
-    }
-    
     try {
       const response = await api.post('/api/auth/login', { email, password });
       persistAuth({
@@ -206,6 +190,7 @@ function Login() {
           <button
             type="button"
             onClick={() => handleDemoLogin('admin')}
+            disabled={loading}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
           >
             Demo Admin
@@ -213,11 +198,15 @@ function Login() {
           <button
             type="button"
             onClick={() => handleDemoLogin('student')}
+            disabled={loading}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
           >
             Demo Student
           </button>
         </div>
+        <p className="mt-2 text-center text-[11px] font-semibold text-slate-400">
+          Demo credentials are authenticated via backend to keep protected APIs working.
+        </p>
 
         {error && (
           <div className="mt-6 p-4 rounded-xl flex items-start gap-3 text-sm animate-in fade-in slide-in-from-bottom-2 bg-red-50 text-red-800 border border-red-200">

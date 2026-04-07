@@ -1,71 +1,128 @@
-import React from 'react';
-import { MapPin, GithubIcon, Award, Code, Cpu, ExternalLink } from '../constants/icons';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../lib/api';
+import ReferralCard from '../components/marketing/ReferralCard';
+import { ExternalLink, Eye, Sparkles, Target, Users } from '../constants/icons';
 
 function Profile() {
+  const [user, setUser] = useState(null);
+  const [referralStats, setReferralStats] = useState({ invites: 0, successfulSignups: 0 });
+  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadProfile() {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('authUser') || '{}');
+        if (mounted) setUser(storedUser);
+
+        const response = await api.get('/api/auth/me');
+        if (!mounted) return;
+
+        setUser(response.data.data);
+
+        try {
+          const referralResponse = await api.get('/api/users/me/referrals');
+          if (mounted) setReferralStats(referralResponse.data.data.referralStats || referralResponse.data.data);
+        } catch {
+          // Referral stats are optional for older accounts.
+        }
+      } catch {
+        if (mounted) {
+          setUser(JSON.parse(localStorage.getItem('authUser') || '{}'));
+        }
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    loadProfile();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const referralCode = user?.referralCode || 'N/A';
+  const referralUrl = `${window.location.origin}/signup?ref=${referralCode}`;
+
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(referralUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1200);
+  };
+
+  const inviteFriends = async () => {
+    if (!user?.referralCode) return;
+    await api.post('/api/users/referrals/invite', { referralCode: user.referralCode }).catch(() => {});
+    await copyLink();
+  };
+
+  if (loading) {
+    return <div className="h-72 animate-pulse rounded-3xl bg-slate-100" />;
+  }
+
   return (
-    <div className="animate-in pb-20 max-w-6xl mx-auto mt-6">
-      {/* Main Grid Container */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[180px]">
-        
-        {/* Profile Card (Large 2x2) */}
-        <div className="md:col-span-2 md:row-span-2 bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
-          <div className="relative">
-            <div className="w-24 h-24 rounded-2xl overflow-hidden mb-6 ring-4 ring-gray-50">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Avatar" className="w-full h-full object-cover" />
-            </div>
-            <h1 className="text-4xl font-black tracking-tight text-gray-900">Aditya Gaikar</h1>
-            <p className="text-lg text-gray-500 font-medium mt-2">Full Stack Developer @ IIT Bombay</p>
+    <div className="space-y-6 py-4">
+      <section className="rounded-3xl border border-slate-200 bg-linear-to-br from-white to-cyan-50 p-8 shadow-sm">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div className="max-w-2xl">
+            <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">
+              <Sparkles size={14} /> Your Profile
+            </p>
+            <h1 className="mt-2 text-3xl font-black text-slate-900">{user?.name || 'Your account'}</h1>
+            <p className="mt-2 text-slate-600">{user?.headline || 'Review your public portfolio, referrals, and upgrade opportunities.'}</p>
           </div>
-          <div className="flex gap-3">
-             <button className="bg-black text-white px-6 py-3 rounded-xl font-bold text-sm hover:scale-105 transition-transform">Hire Me</button>
-             <button className="bg-gray-100 text-gray-900 px-4 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors"><GithubIcon size={18} /></button>
-          </div>
-        </div>
-
-        {/* Location (Small 1x1) */}
-        <div className="bg-blue-600 rounded-[2rem] p-6 text-white flex flex-col justify-center items-center text-center shadow-lg shadow-blue-200">
-          <MapPin size={32} className="mb-2 opacity-80" />
-          <p className="font-bold">Mumbai, IN</p>
-        </div>
-
-        {/* Experience (Small 1x1) */}
-        <div className="bg-white rounded-[2rem] p-6 border border-gray-100 flex flex-col justify-center items-center text-center">
-          <h4 className="text-4xl font-black text-gray-900">3+</h4>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Years Coding</p>
-        </div>
-
-        {/* Skills Bento (Wide 2x1) */}
-        <div className="md:col-span-2 bg-gray-900 rounded-[2rem] p-8 text-white flex flex-col justify-center relative overflow-hidden">
-          <Cpu className="absolute right-6 top-6 opacity-20 text-white" size={60} />
-          <h3 className="text-xl font-bold mb-4">Tech Stack</h3>
           <div className="flex flex-wrap gap-2">
-            {['React', 'Node.js', 'Tailwind', 'Python', 'AWS'].map(skill => (
-              <span key={skill} className="bg-white/10 border border-white/10 px-3 py-1 rounded-lg text-xs font-bold">{skill}</span>
-            ))}
+            <button onClick={copyLink} type="button" className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
+              <ExternalLink size={14} /> {copied ? 'Link copied' : 'Copy referral link'}
+            </button>
+            <button onClick={inviteFriends} type="button" className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+              <Users size={14} /> Invite friends
+            </button>
           </div>
+        </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Referral Code</p>
+            <p className="mt-2 text-2xl font-black text-slate-900">{referralCode}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Invite Link</p>
+            <p className="mt-2 break-all text-sm font-semibold text-slate-700">{referralUrl}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Public Views</p>
+            <p className="mt-2 text-3xl font-black text-slate-900">{user?.analytics?.profileViews || 0}</p>
+          </div>
+        </div>
+      </section>
+
+      <ReferralCard
+        referralCode={referralCode}
+        stats={referralStats}
+        onCopy={copyLink}
+        onInvite={inviteFriends}
+      />
+
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500"><Eye size={14} /> Public Profile</div>
+          <p className="mt-3 text-sm text-slate-600">Share your public portfolio and track how often recruiters view it.</p>
+          <Link to={`/user/${user?._id || user?.id || ''}`} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
+            Open public profile <ExternalLink size={14} />
+          </Link>
         </div>
 
-        {/* Project Feature (Wide 2x1) */}
-        <div className="md:col-span-2 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-[2rem] p-8 text-white relative group cursor-pointer overflow-hidden">
-          <div className="relative z-10">
-            <h3 className="text-2xl font-bold mb-2">TalentNexus Platform</h3>
-            <p className="text-white/70 text-sm mb-4">A complete career services engine with CRM & JWT Auth.</p>
-            <ExternalLink size={20} className="group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform" />
-          </div>
-          <Code size={120} className="absolute -right-8 -bottom-8 opacity-10 rotate-12" />
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500"><Target size={14} /> Upgrade Prompt</div>
+          <p className="mt-3 text-sm text-slate-600">Unlock profile boosts, richer analytics, and recruiter priority placement with Pro.</p>
+          <Link to="/student/pro" className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            Upgrade to Pro
+          </Link>
         </div>
-
-        {/* About (Medium 2x1) */}
-        <div className="md:col-span-2 bg-white rounded-[2rem] p-8 border border-gray-100 flex items-center gap-6">
-          <div className="w-16 h-16 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center shrink-0">
-            <Award size={32} />
-          </div>
-          <p className="text-gray-600 text-sm leading-relaxed font-medium">
-            Building digital experiences that combine heavy technical engineering with artistic user interfaces.
-          </p>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

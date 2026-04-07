@@ -1,0 +1,142 @@
+export const ROLE_CATEGORIES = ['All', 'Engineering', 'Product', 'Design', 'Data', 'Marketing'];
+
+export const EXPERIENCE_LEVELS = ['Internship', 'Entry', 'Mid', 'Senior', 'Lead'];
+
+export const TRENDING_ROLES = [
+  'AI Product Manager',
+  'Frontend Engineer',
+  'Data Analyst',
+  'Growth Marketer',
+  'DevOps Engineer',
+];
+
+export const SKILL_POOL = [
+  'React',
+  'TypeScript',
+  'Node.js',
+  'Python',
+  'SQL',
+  'Figma',
+  'Tailwind',
+  'AWS',
+  'GraphQL',
+  'Analytics',
+];
+
+export const JOBS_DATA = [
+  {
+    id: 'job-1',
+    title: 'Frontend Engineer',
+    company: 'Linear Labs',
+    category: 'Engineering',
+    location: 'Remote',
+    salaryK: 145,
+    posted: '2h ago',
+    experience: 'Mid',
+    matchScore: 94,
+    skills: ['React', 'TypeScript', 'Tailwind'],
+    trending: true,
+    promoted: true,
+    shortDescription: 'Build polished, fast interfaces for our issue tracking suite used by modern engineering teams.',
+    description:
+      'You will own key product surfaces from concept to production, collaborating deeply with design and platform teams. We care about performance budgets, accessibility, and thoughtful interaction design. Experience shipping React apps at scale and a strong eye for UX details are required.',
+    recruiter: {
+      name: 'Maya Patel',
+      role: 'Senior Technical Recruiter',
+      availability: 'Replies within 1 business day',
+    },
+    companyInfo: 'Linear Labs builds workflow tooling for high-performing product and engineering organizations.',
+  },
+  {
+    id: 'job-2',
+    title: 'Product Designer',
+    company: 'Stripe Orbit',
+    category: 'Design',
+    location: 'Hybrid - Bengaluru',
+    salaryK: 130,
+    posted: '5h ago',
+    experience: 'Mid',
+    matchScore: 88,
+    skills: ['Figma', 'Analytics', 'React'],
+    trending: false,
+    promoted: false,
+    shortDescription: 'Design resilient B2B workflows with clear hierarchy and delightful micro-interactions.',
+    description:
+      'As a Product Designer, you will shape end-to-end experiences across our onboarding and billing products. You should be comfortable with ambiguity, prototyping, and design systems. Partnering closely with PM and engineering to validate hypotheses is part of daily work.',
+    recruiter: {
+      name: 'Rohan Kapoor',
+      role: 'Design Talent Partner',
+      availability: 'Usually responds same day',
+    },
+    companyInfo: 'Stripe Orbit powers payments, billing, and revenue tooling for global internet businesses.',
+  },
+  {
+    id: 'job-3',
+    title: 'Data Analyst',
+    company: 'LinkedTalent',
+    category: 'Data',
+    location: 'Remote',
+    salaryK: 110,
+    posted: '1d ago',
+    experience: 'Entry',
+    matchScore: 91,
+    skills: ['SQL', 'Python', 'Analytics'],
+    trending: true,
+    promoted: false,
+    shortDescription: 'Turn marketplace data into practical insights for hiring and conversion optimization.',
+    description:
+      'You will analyze funnel behavior, run cohort deep dives, and build dashboards that inform product priorities. We are looking for strong SQL fundamentals, clear communication, and comfort with experimentation frameworks.',
+    recruiter: {
+      name: 'Anika Das',
+      role: 'People Analytics Recruiter',
+      availability: 'Replies within 24 hours',
+    },
+    companyInfo: 'LinkedTalent connects top candidates with modern companies through data-driven matching.',
+  },
+  {
+    id: 'job-4',
+    title: 'Growth Marketer',
+    company: 'RocketShip HR',
+    category: 'Marketing',
+    location: 'On-site - Mumbai',
+    salaryK: 95,
+    posted: '3h ago',
+    experience: 'Entry',
+    matchScore: 79,
+    skills: ['Analytics', 'GraphQL', 'SQL'],
+    trending: false,
+    promoted: false,
+    shortDescription: 'Own campaign experiments and lifecycle messaging for candidate acquisition.',
+    description:
+      'In this role you will run growth loops, optimize ad spend, and improve onboarding conversion. You should be comfortable with paid channels, funnel analysis, and communicating insights to cross-functional stakeholders.',
+    recruiter: {
+      name: 'Ishita Rao',
+      role: 'Growth Hiring Partner',
+      availability: 'Replies within 2 days',
+    },
+    companyInfo: 'RocketShip HR is a hiring platform focused on high-growth startups in APAC.',
+  },
+  {
+    id: 'job-5',
+    title: 'Platform Engineer',
+    company: 'NeonScale',
+    category: 'Engineering',
+    location: 'Remote',
+    salaryK: 170,
+    posted: '40m ago',
+    experience: 'Senior',
+    matchScore: 96,
+    skills: ['Node.js', 'AWS', 'GraphQL'],
+    trending: true,
+    promoted: true,
+    shortDescription: 'Build platform primitives that power secure and reliable global product experiences.',
+    description:
+      'You will work on distributed systems, deployment automation, and platform reliability. The team values engineering rigor, incident ownership, and clear documentation. Prior production experience with cloud infrastructure and observability is expected.',
+    recruiter: {
+      name: 'Dev Malhotra',
+      role: 'Engineering Recruiter',
+      availability: 'Fast-track profile review',
+    },
+    companyInfo: 'NeonScale builds developer infrastructure for product teams shipping globally.',
+  },
+];

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "seed": "node seed/seedData.js"
+    "seed": "node seed/seed.js",
+    "seed:legacy": "node seed/seedData.js"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +19,6 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^17.4.0",
     "express": "^5.2.1",
-    "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.3.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",

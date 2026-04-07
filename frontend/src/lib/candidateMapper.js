@@ -39,11 +39,14 @@ export function mapCandidateToCard(candidate, index = 0) {
       culture: Math.max(candidate.matchScore - 5, 45),
       responsiveness: Math.max(candidate.matchScore - 2, 40),
     },
-    skills: ['Communication', 'Ownership', 'Collaboration'],
+    skills: candidate.skills || ['Communication', 'Ownership', 'Collaboration'],
     rate: '$55/hr',
-    exp: '4y',
+    exp: candidate.experience || '4y',
     rating: Math.max(4.2, Math.min(5, candidate.matchScore / 20)),
     img:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=220&q=80',
+      candidate.avatar || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=220&q=80',
+    headline: candidate.headline,
+    bio: candidate.bio,
+    publicProfilePath: `/user/${candidate._id}`,
   };
 }

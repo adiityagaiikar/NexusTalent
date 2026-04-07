@@ -25,8 +25,23 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['student', 'employer'],
+      enum: ['student', 'candidate', 'employer', 'recruiter', 'admin'],
       default: 'student',
+    },
+    referralCode: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+    referredBy: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    referralStats: {
+      invites: { type: Number, default: 0, min: 0 },
+      successfulSignups: { type: Number, default: 0, min: 0 },
     },
   },
   {

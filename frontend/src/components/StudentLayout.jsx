@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Briefcase, Search, User, Sparkles, Clock3, LogOut, Zap } from '../constants/icons';
+import { Briefcase, Search, User, Sparkles, Clock3, LogOut, Zap, Target, TrendingUp, Gift } from '../constants/icons';
 
 function StudentLayout() {
   const navigate = useNavigate();
@@ -41,11 +41,20 @@ function StudentLayout() {
             <NavLink to="/student/pro" className={itemClass}>
               <Zap size={14} /> Upgrade Pro
             </NavLink>
+            <NavLink to="/student/referral" className={itemClass}>
+              <Gift size={14} /> Refer & Earn
+            </NavLink>
             <NavLink to="/student/products" className={itemClass}>
               <Briefcase size={14} /> Products
             </NavLink>
             <NavLink to="/student/profile" className={itemClass}>
               <User size={14} /> Profile
+            </NavLink>
+            <NavLink to="/blog" className={itemClass}>
+              <TrendingUp size={14} /> Blog
+            </NavLink>
+            <NavLink to="/events" className={itemClass}>
+              <Target size={14} /> Events
             </NavLink>
           </nav>
 

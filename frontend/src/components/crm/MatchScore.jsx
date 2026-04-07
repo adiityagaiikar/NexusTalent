@@ -1,58 +1,65 @@
 import React from 'react';
 
-function getScoreStyle(score) {
-  if (score >= 80) {
-    return {
-      text: 'text-emerald-700',
-      bar: 'bg-emerald-500',
-      track: 'bg-emerald-100',
-      ring: 'ring-emerald-200',
-    };
-  }
-
-  if (score >= 50) {
-    return {
-      text: 'text-amber-700',
-      bar: 'bg-amber-500',
-      track: 'bg-amber-100',
-      ring: 'ring-amber-200',
-    };
-  }
-
-  return {
-    text: 'text-rose-700',
-    bar: 'bg-rose-500',
-    track: 'bg-rose-100',
-    ring: 'ring-rose-200',
-  };
+function getScoreColor(score) {
+  if (score >= 80) return { stroke: '#10b981', text: 'text-emerald-700', bg: 'bg-emerald-50' };
+  if (score >= 55) return { stroke: '#f59e0b', text: 'text-amber-600', bg: 'bg-amber-50' };
+  return { stroke: '#f43f5e', text: 'text-rose-600', bg: 'bg-rose-50' };
 }
 
-function MatchScore({ score, breakdown }) {
-  const style = getScoreStyle(score);
+function MatchScore({ score = 0, breakdown, size = 52 }) {
+  const { stroke, text, bg } = getScoreColor(score);
+  const radius = (size - 8) / 2;
+  const circ = 2 * Math.PI * radius;
+  const offset = circ - (score / 100) * circ;
 
   return (
-    <div className="group relative flex items-center gap-3">
-      <div className={`h-2 w-28 overflow-hidden rounded-full ${style.track}`}>
+    <div className="group relative inline-flex flex-col items-center gap-1">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: 'rotate(-90deg)' }}>
+          <circle
+            cx={size / 2} cy={size / 2} r={radius}
+            stroke="#f1f5f9" strokeWidth="4" fill="none"
+          />
+          <circle
+            cx={size / 2} cy={size / 2} r={radius}
+            stroke={stroke} strokeWidth="4" fill="none"
+            strokeDasharray={circ} strokeDashoffset={offset}
+            strokeLinecap="round"
+            style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1)' }}
+          />
+        </svg>
+        <span
+          className={`absolute inset-0 flex items-center justify-center text-[11px] font-black ${text}`}
+        >
+          {score}%
+        </span>
+      </div>
+
+      {/* Breakdown tooltip */}
+      {breakdown && (
         <div
-          className={`h-full rounded-full ${style.bar} transition-all duration-500`}
-          style={{ width: `${score}%` }}
-        />
-      </div>
-      <span className={`text-sm font-bold ${style.text}`}>{score}%</span>
-
-      <button
-        type="button"
-        className={`hidden rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 ring-inset md:inline ${style.ring} ${style.text}`}
-      >
-        Why?
-      </button>
-
-      <div className="pointer-events-none absolute left-0 top-8 z-20 hidden min-w-52 rounded-xl border border-slate-200 bg-white/95 p-3 text-xs text-slate-600 shadow-xl backdrop-blur-sm group-hover:block dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200">
-        <p className="mb-1 font-semibold text-slate-800 dark:text-slate-100">Score Breakdown</p>
-        <p>Skills Fit: {breakdown.skills}%</p>
-        <p>Culture Fit: {breakdown.culture}%</p>
-        <p>Responsiveness: {breakdown.responsiveness}%</p>
-      </div>
+          className={`pointer-events-none absolute -top-2 left-1/2 z-30 hidden min-w-[168px] -translate-x-1/2 -translate-y-full rounded-xl border border-slate-200 bg-white p-3 text-xs shadow-xl group-hover:block`}
+        >
+          <p className="mb-2 font-semibold text-slate-800">Score Breakdown</p>
+          {[
+            { label: 'Skills Fit', val: breakdown.skills },
+            { label: 'Culture Fit', val: breakdown.culture },
+            { label: 'Responsiveness', val: breakdown.responsiveness },
+          ].map(({ label, val }) => (
+            <div key={label} className="mb-1.5">
+              <div className="flex justify-between text-[10px] font-semibold text-slate-500 mb-0.5">
+                <span>{label}</span><span className={text}>{val}%</span>
+              </div>
+              <div className="h-1 overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ width: `${val}%`, background: stroke }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

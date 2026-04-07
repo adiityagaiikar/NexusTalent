@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Briefcase, DollarSign, LayoutDashboard, Sparkles, Users, LogOut, Target } from '../constants/icons';
+import NotificationCenter from './NotificationCenter';
 
 function AdminLayout() {
   const navigate = useNavigate();
@@ -49,11 +50,17 @@ function AdminLayout() {
             <NavLink to="/admin/strategy" className={itemClass}>
               <Target size={16} /> Strategy
             </NavLink>
+            <NavLink to="/admin/system-intelligence" className={itemClass}>
+              <Sparkles size={16} /> System Intelligence
+            </NavLink>
           </nav>
 
           <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Signed in as</p>
-            <p className="mt-1 text-sm font-bold text-slate-800">{user.name || 'Admin User'}</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Signed in as</p>
+              <NotificationCenter />
+            </div>
+            <p className="text-sm font-bold text-slate-800">{user.name || 'Admin User'}</p>
             <p className="text-xs font-medium text-slate-500">{user.email || 'admin@talentnexus.com'}</p>
             <button
               onClick={handleLogout}

@@ -20,6 +20,38 @@ const candidateSchema = new mongoose.Schema(
       min: 0,
       max: 100,
     },
+    experience: {
+      type: String,
+      enum: ['Internship', 'Entry', 'Mid', 'Senior', 'Lead'],
+      default: 'Entry',
+    },
+    skills: {
+      type: [String],
+      default: [],
+    },
+    headline: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: 160,
+    },
+    bio: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: 500,
+    },
+    avatar: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    profileSlug: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
     lastActive: {
       type: Date,
       required: true,
