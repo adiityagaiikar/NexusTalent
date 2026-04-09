@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Briefcase, DollarSign, LayoutDashboard, Sparkles, Users, LogOut, Target } from '../constants/icons';
+import { Briefcase, DollarSign, LayoutDashboard, Sparkles, Users, LogOut, Target, Shield } from '../constants/icons';
 import NotificationCenter from './NotificationCenter';
 
 function AdminLayout() {
@@ -36,7 +36,7 @@ function AdminLayout() {
 
           <nav className="space-y-1">
             <NavLink to="/admin/dashboard" className={itemClass}>
-              <LayoutDashboard size={16} /> CRM Workspace
+              <LayoutDashboard size={16} /> Hiring Dashboard
             </NavLink>
             <NavLink to="/admin/products" className={itemClass}>
               <Briefcase size={16} /> Products
@@ -52,6 +52,9 @@ function AdminLayout() {
             </NavLink>
             <NavLink to="/admin/system-intelligence" className={itemClass}>
               <Sparkles size={16} /> System Intelligence
+            </NavLink>
+            <NavLink to="/admin/security" className={itemClass}>
+              <Shield size={16} /> Security
             </NavLink>
           </nav>
 
@@ -76,9 +79,6 @@ function AdminLayout() {
           <Outlet />
         </main>
       </div>
-      <footer className="pb-6 text-center text-xs font-semibold text-slate-400">
-        Made by Aditya Gaikar
-      </footer>
     </div>
   );
 }

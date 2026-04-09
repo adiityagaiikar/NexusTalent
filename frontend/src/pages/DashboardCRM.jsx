@@ -6,8 +6,11 @@ import {
   AlertCircle,
   Briefcase,
   CheckCircle,
+  Clock3,
   Clock,
+  Globe,
   Mail,
+  Search,
   Sparkles,
   Target,
   TrendingUp,
@@ -25,6 +28,17 @@ import { JOBS_DATA } from '../components/jobs/jobsData';
 const STAGES = ['Applied', 'Screening', 'Interviewing', 'Hired'];
 const PROMOTION_PRICE = 50;
 const PROMOTION_DURATION = 7;
+const INTEGRATION_STATUS = [
+  { id: 'ats', name: 'Internal ATS', lastSync: '2m ago', status: 'healthy' },
+  { id: 'linkedin', name: 'LinkedIn Jobs Feed', lastSync: '6m ago', status: 'healthy' },
+  { id: 'referral', name: 'Referral Pool', lastSync: '1m ago', status: 'healthy' },
+  { id: 'naukri', name: 'Naukri Connector', lastSync: '22m ago', status: 'degraded' },
+];
+const SLOT_SUGGESTIONS = [
+  { id: 's1', time: '10:00 AM - 10:30 AM', score: 94, label: 'Best' },
+  { id: 's2', time: '12:30 PM - 1:00 PM', score: 86, label: 'Good' },
+  { id: 's3', time: '5:00 PM - 5:30 PM', score: 62, label: 'Conflict Risk' },
+];
 
 function getStage(matchScore) {
   if (matchScore >= 90) return 'Hired';
@@ -108,7 +122,7 @@ function ActivityTimeline({ items }) {
           <div key={item.id} className="relative flex gap-4">
             {/* vertical connector */}
             {!isLast && (
-              <div className="absolute left-[15px] top-8 h-[calc(100%-8px)] w-px bg-slate-100" />
+              <div className="absolute left-3.75 top-8 h-[calc(100%-8px)] w-px bg-slate-100" />
             )}
             {/* icon bubble */}
             <div
@@ -169,6 +183,7 @@ function DashboardCRM() {
   });
   const [checkoutJob, setCheckoutJob] = useState(null);
   const [isPromoting, setIsPromoting] = useState(false);
+  const [selectedSlotId, setSelectedSlotId] = useState('s1');
 
   useEffect(() => {
     let mounted = true;
@@ -438,6 +453,69 @@ function DashboardCRM() {
               <p className="text-xs font-semibold uppercase tracking-widest text-emerald-500">Hired</p>
               <p className="text-2xl font-black tracking-tighter text-emerald-700">{byStage.Hired.length}</p>
             </div>
+          </div>
+        </motion.article>
+      </div>
+
+      {/* ── SCM Equivalent: Integration + Slot Optimization ── */}
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <motion.article
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.37 }}
+          className="rounded-2xl border border-slate-200/60 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] xl:col-span-2"
+        >
+          <h2 className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
+            <Globe size={13} className="text-indigo-500" /> Recruiter / Job-board Integration Simulation
+          </h2>
+          <div className="grid gap-3 md:grid-cols-2">
+            {INTEGRATION_STATUS.map((connector) => (
+              <div key={connector.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold text-slate-900">{connector.name}</p>
+                  <span
+                    className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-widest ${
+                      connector.status === 'healthy'
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-amber-100 text-amber-700'
+                    }`}
+                  >
+                    {connector.status}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs text-slate-500">Last sync: {connector.lastSync}</p>
+                <button type="button" className="mt-3 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+                  <Search size={12} /> Re-sync
+                </button>
+              </div>
+            ))}
+          </div>
+        </motion.article>
+
+        <motion.article
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.39 }}
+          className="rounded-2xl border border-slate-200/60 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+        >
+          <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
+            <Clock3 size={13} className="text-indigo-500" /> Interview Slot Optimizer
+          </h2>
+          <div className="space-y-2.5">
+            {SLOT_SUGGESTIONS.map((slot) => (
+              <button
+                key={slot.id}
+                type="button"
+                onClick={() => setSelectedSlotId(slot.id)}
+                className={`w-full rounded-xl border px-3 py-2.5 text-left transition ${
+                  selectedSlotId === slot.id
+                    ? 'border-indigo-300 bg-indigo-50'
+                    : 'border-slate-200 bg-slate-50 hover:bg-slate-100'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold text-slate-800">{slot.time}</p>
+                  <span className="text-xs font-bold text-slate-600">{slot.score}%</span>
+                </div>
+                <p className="mt-1 text-[11px] font-semibold uppercase tracking-widest text-slate-500">{slot.label}</p>
+              </button>
+            ))}
           </div>
         </motion.article>
       </div>

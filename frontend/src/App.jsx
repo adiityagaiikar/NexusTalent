@@ -21,6 +21,7 @@ const ApplicationTracker = lazy(() => import('./pages/ApplicationTracker'));
 const EmployerPricing = lazy(() => import('./pages/EmployerPricing'));
 const StudentUpgrade = lazy(() => import('./pages/StudentUpgrade'));
 const ReferralDashboard = lazy(() => import('./pages/ReferralDashboard'));
+const SecurityCenter = lazy(() => import('./pages/SecurityCenter'));
 const RoleGate = lazy(() => import('./components/RoleGate'));
 const AdminLayout = lazy(() => import('./components/AdminLayout'));
 const StudentLayout = lazy(() => import('./components/StudentLayout'));
@@ -78,10 +79,6 @@ function App() {
           <Route path="/portal" element={<PortalRedirect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<Blog />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:id" element={<Events />} />
           <Route path="/user/:id" element={<PublicProfile />} />
 
           <Route element={<RoleGate allowedRoles={['admin', 'employer', 'recruiter']} />}>
@@ -94,6 +91,7 @@ function App() {
               <Route path="strategy" element={<Strategy />} />
               <Route path="insights" element={<Insights />} />
               <Route path="system-intelligence" element={<SystemIntelligence />} />
+              <Route path="security" element={<SecurityCenter />} />
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>
           </Route>
@@ -107,6 +105,11 @@ function App() {
               <Route path="referral" element={<ReferralDashboard />} />
               <Route path="products" element={<Products />} />
               <Route path="products/:slug" element={<ProductDetails />} />
+              <Route path="security" element={<SecurityCenter />} />
+              <Route path="blog" element={<Blog />} />
+              <Route path="blog/:id" element={<Blog />} />
+              <Route path="events" element={<Events />} />
+              <Route path="events/:id" element={<Events />} />
               <Route index element={<Navigate to="jobs" replace />} />
             </Route>
           </Route>
@@ -116,6 +119,10 @@ function App() {
           <Route path="/talent" element={<Navigate to="/admin/talent" replace />} />
           <Route path="/jobs" element={<Navigate to="/student/jobs" replace />} />
           <Route path="/profile" element={<Navigate to="/student/profile" replace />} />
+          <Route path="/blog" element={<Navigate to="/student/blog" replace />} />
+          <Route path="/blog/:id" element={<Navigate to="/student/blog/:id" replace />} />
+          <Route path="/events" element={<Navigate to="/student/events" replace />} />
+          <Route path="/events/:id" element={<Navigate to="/student/events/:id" replace />} />
           <Route path="/products" element={<Navigate to="/student/products" replace />} />
           <Route path="/products/:slug" element={<Navigate to="/student/products" replace />} />
 

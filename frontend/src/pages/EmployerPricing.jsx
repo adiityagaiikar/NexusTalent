@@ -8,6 +8,16 @@ const FEATURES = [
   'Ghosting Prevention Alerts',
 ];
 
+const STRATEGY_7P = [
+  { key: 'Product', value: 'Career coaching, job discovery, referral acceleration, interview prep subscriptions' },
+  { key: 'Price', value: 'Free starter value, monthly pro plans, annual savings, bundle pricing' },
+  { key: 'Place', value: 'Mobile-first student portal, admin workspace, partner hiring channels' },
+  { key: 'Promotion', value: 'Referral rewards, social proof campaigns, campus and corporate collaborations' },
+  { key: 'People', value: 'Recruiters, hiring managers, mentors, student success advisors' },
+  { key: 'Process', value: 'Discover → Apply → Follow-up → Interview → Offer pipeline automation' },
+  { key: 'Physical Evidence', value: 'Verified employer badges, candidate reviews, downloadable progress reports' },
+];
+
 function Price({ monthly, annual, yearly }) {
   return (
     <p className="mt-4 text-4xl font-black text-slate-900">
@@ -120,6 +130,19 @@ function EmployerPricing() {
           </article>
         ))}
       </div>
+
+      <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">7P Strategy Canvas</p>
+        <h2 className="mt-2 text-2xl font-black text-slate-900">How TalentNexus Maps Product-Market Strategy</h2>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          {STRATEGY_7P.map((item) => (
+            <article key={item.key} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">{item.key}</p>
+              <p className="mt-1 text-sm font-medium text-slate-700">{item.value}</p>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

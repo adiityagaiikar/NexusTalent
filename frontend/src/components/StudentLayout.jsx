@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Briefcase, Search, User, Sparkles, Clock3, LogOut, Zap, Target, TrendingUp, Gift } from '../constants/icons';
+import { Briefcase, Search, User, Sparkles, Clock3, LogOut, Zap, Target, TrendingUp, Gift, Shield } from '../constants/icons';
 
 function StudentLayout() {
   const navigate = useNavigate();
@@ -50,10 +50,13 @@ function StudentLayout() {
             <NavLink to="/student/profile" className={itemClass}>
               <User size={14} /> Profile
             </NavLink>
-            <NavLink to="/blog" className={itemClass}>
+            <NavLink to="/student/security" className={itemClass}>
+              <Shield size={14} /> Security
+            </NavLink>
+            <NavLink to="/student/blog" className={itemClass}>
               <TrendingUp size={14} /> Blog
             </NavLink>
-            <NavLink to="/events" className={itemClass}>
+            <NavLink to="/student/events" className={itemClass}>
               <Target size={14} /> Events
             </NavLink>
           </nav>
@@ -80,9 +83,6 @@ function StudentLayout() {
           <Outlet />
         </div>
       </main>
-      <footer className="pb-6 text-center text-xs font-semibold text-slate-400">
-        Made by Aditya Gaikar
-      </footer>
     </div>
   );
 }
