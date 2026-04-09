@@ -111,8 +111,9 @@ function buildProducts() {
       image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80',
       features: ['Gig Matching', 'Visibility Boost', 'Client Templates'],
     },
-  ].map((product) => ({
+  ].map((product, index) => ({
     ...product,
+    sku: `SKU-${String(index + 1).padStart(3, '0')}`,
     slug: slugify(product.title),
     name: product.title,
     rating: 0,

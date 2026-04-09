@@ -5,7 +5,7 @@ import { Lock, Mail, ShieldCheck, AlertCircle, Loader2 } from '../constants/icon
 
 // Firebase Imports
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '../firebase'; 
+import { auth, firebaseConfigured } from '../firebase'; 
 
 const LOCAL_CREDENTIALS = {
   admin: {
@@ -63,6 +63,11 @@ function Login() {
 
   // NEW: Firebase Google Login Handler
   const handleGoogleLogin = async () => {
+    if (!auth || !firebaseConfigured) {
+      setError('Google login is disabled. Add VITE_FIREBASE_* keys in frontend/.env and restart Vite.');
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {
@@ -168,7 +173,7 @@ function Login() {
         <button
           type="button"
           onClick={handleGoogleLogin}
-          disabled={loading}
+          disabled={loading || !firebaseConfigured}
           className="w-full mt-4 flex justify-center items-center gap-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-semibold py-3.5 rounded-xl transition-all shadow-sm"
         >
           <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -226,4 +231,4 @@ function Login() {
   );
 }
 
-export default Login;cd
+export default Login;

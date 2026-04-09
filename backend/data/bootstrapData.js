@@ -12,6 +12,18 @@ async function ensureDefaultUsers() {
 
   await Promise.all([
     User.findOneAndUpdate(
+      { email: 'admin@talentnexus.com' },
+      {
+        $set: {
+          name: 'Demo Admin',
+          password: hashedPassword,
+          role: 'admin',
+          referralCode: createReferralCode('admin'),
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ),
+    User.findOneAndUpdate(
       { email: 'employer@talentnexus.com' },
       {
         $set: {

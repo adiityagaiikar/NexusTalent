@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, RecaptchaVerifier } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, firebaseConfigured } from '../firebase';
 import { AlertCircle, Loader2, Lock, Mail, ShieldCheck } from '../constants/icons';
 
 function Signup() {
@@ -17,6 +17,10 @@ function Signup() {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
+    if (!auth || !firebaseConfigured) {
+      return;
+    }
+
     if (!recaptchaRef.current) {
       recaptchaRef.current = new RecaptchaVerifier(auth, 'signup-recaptcha-container', {
         size: 'invisible',
@@ -31,6 +35,12 @@ function Signup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!auth || !firebaseConfigured) {
+      setError('Signup via Firebase is disabled. Add VITE_FIREBASE_* keys in frontend/.env and restart Vite.');
+      return;
+    }
+
     setLoading(true);
     setError('');
     setSuccess('');

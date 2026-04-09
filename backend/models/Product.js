@@ -22,6 +22,7 @@ const qnaSchema = new mongoose.Schema(
 
 const productSchema = new mongoose.Schema(
   {
+    sku: { type: String, trim: true, unique: true, sparse: true },
     slug: { type: String, required: true, unique: true, trim: true },
     title: { type: String, required: true, trim: true, maxlength: 120 },
     name: { type: String, trim: true, maxlength: 120 },
