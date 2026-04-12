@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../lib/api';
 import {
@@ -654,60 +655,67 @@ function DashboardCRM() {
         </div>
       </motion.section>
 
-      <AnimatePresence>
-        {checkoutJob && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 p-4"
-          >
+      {createPortal(
+        <AnimatePresence>
+          {checkoutJob && (
             <motion.div
-              initial={{ opacity: 0, y: 16, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-              className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] bg-slate-900/45 p-4"
+              onClick={() => setCheckoutJob(null)}
             >
-              <div className="mb-4 flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600">Mock Stripe Checkout</p>
-                  <h3 className="mt-1 text-xl font-black text-slate-900">Promote This Listing</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setCheckoutJob(null)}
-                  className="rounded-lg border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-100"
+              <div className="flex min-h-dvh items-center justify-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 12, scale: 0.98 }}
+                  transition={{ duration: 0.2 }}
+                  className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6"
+                  onClick={(event) => event.stopPropagation()}
                 >
-                  <X size={15} />
-                </button>
-              </div>
+                  <div className="mb-4 flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600">Mock Stripe Checkout</p>
+                      <h3 className="mt-1 text-xl font-black text-slate-900">Promote This Listing</h3>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setCheckoutJob(null)}
+                      className="rounded-lg border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-100"
+                    >
+                      <X size={15} />
+                    </button>
+                  </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-sm font-bold text-slate-900">{checkoutJob.title}</p>
-                <p className="text-xs text-slate-500">{checkoutJob.company}</p>
-                <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className="text-slate-500">Sticky placement duration</span>
-                  <span className="font-semibold text-slate-900">{PROMOTION_DURATION} days</span>
-                </div>
-                <div className="mt-1 flex items-center justify-between text-sm">
-                  <span className="text-slate-500">Checkout amount</span>
-                  <span className="font-black text-indigo-600">${PROMOTION_PRICE}</span>
-                </div>
-              </div>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-sm font-bold text-slate-900">{checkoutJob.title}</p>
+                    <p className="text-xs text-slate-500">{checkoutJob.company}</p>
+                    <div className="mt-3 flex items-center justify-between text-sm">
+                      <span className="text-slate-500">Sticky placement duration</span>
+                      <span className="font-semibold text-slate-900">{PROMOTION_DURATION} days</span>
+                    </div>
+                    <div className="mt-1 flex items-center justify-between text-sm">
+                      <span className="text-slate-500">Checkout amount</span>
+                      <span className="font-black text-indigo-600">${PROMOTION_PRICE}</span>
+                    </div>
+                  </div>
 
-              <button
-                type="button"
-                onClick={handlePromoteCheckout}
-                disabled={isPromoting}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-300"
-              >
-                <Megaphone size={14} /> {isPromoting ? 'Processing...' : `Pay $${PROMOTION_PRICE} & Promote`}
-              </button>
+                  <button
+                    type="button"
+                    onClick={handlePromoteCheckout}
+                    disabled={isPromoting}
+                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-300"
+                  >
+                    <Megaphone size={14} /> {isPromoting ? 'Processing...' : `Pay $${PROMOTION_PRICE} & Promote`}
+                  </button>
+                </motion.div>
+              </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   );
 }
