@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
-  PieChart, Megaphone, Target, Zap, Users, Globe,
+  PieChart, Megaphone, Target, Globe,
   GitMerge, Shield, DollarSign, TrendingUp, ArrowUpRight,
   Layers, BookOpen, Building2, BadgeCheck, Sparkles,
 } from '../constants/icons';
@@ -45,13 +45,6 @@ function MetricCard({ label, value, sub, color = 'indigo', icon }) {
 
 /* ─── Component ───────────────────────────── */
 function Strategy() {
-  const [billing, setBilling] = useState('monthly');
-
-  const prices = {
-    pro: billing === 'monthly' ? 12 : 9,
-    enterprise: billing === 'monthly' ? 299 : 239,
-  };
-
   return (
     <div className="animate-in min-h-screen bg-slate-50 pb-24">
 
@@ -72,84 +65,9 @@ function Strategy() {
       <div className="mx-auto max-w-5xl space-y-10 px-4 pt-10 sm:px-6">
 
         {/* ══════════════════════════════════
-            1 · Revenue Model
+            1 · The Growth Flywheel
         ══════════════════════════════════ */}
         <motion.section custom={0} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
-          <div className="rounded-2xl border border-slate-200/60 bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <SectionLabel>Revenue Model</SectionLabel>
-                <SectionHeading>Monetization Tiers</SectionHeading>
-              </div>
-              {/* Billing toggle */}
-              <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1">
-                {['monthly', 'annual'].map((cycle) => (
-                  <button
-                    key={cycle}
-                    onClick={() => setBilling(cycle)}
-                    className={`rounded-lg px-4 py-1.5 text-xs font-semibold capitalize transition-all duration-200 ${
-                      billing === cycle
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-500 hover:text-slate-700'
-                    }`}
-                  >
-                    {cycle}{cycle === 'annual' && <span className="ml-1 text-emerald-600">-20%</span>}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              {/* Freemium */}
-              <div className="rounded-xl border border-slate-200/60 bg-slate-50 p-6 transition-shadow hover:shadow-md">
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-200 text-slate-600">
-                  <Users size={20} />
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Freemium</p>
-                <p className="mt-1 text-3xl font-black tracking-tighter text-slate-900">$0</p>
-                <p className="mt-3 text-xs text-slate-500 leading-relaxed">
-                  Free profile creation, portfolio hosting, and standard job applications to drive top-of-funnel growth.
-                </p>
-              </div>
-
-              {/* Pro – highlighted */}
-              <div className="relative rounded-xl border-2 border-indigo-400 bg-white p-6 shadow-[0_4px_24px_rgba(99,102,241,0.15)]">
-                <div className="absolute -top-3 right-4 rounded-full bg-indigo-600 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
-                  Most Popular
-                </div>
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                  <Zap size={20} />
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-400">Pro Creatives</p>
-                <p className="mt-1 text-3xl font-black tracking-tighter text-slate-900">
-                  ${prices.pro}<span className="text-sm font-medium text-slate-400">/mo</span>
-                </p>
-                <p className="mt-3 text-xs text-slate-500 leading-relaxed">
-                  Advanced analytics, custom domain mapping, and priority ranking in employer searches.
-                </p>
-              </div>
-
-              {/* Enterprise */}
-              <div className="rounded-xl border border-slate-200/60 bg-slate-50 p-6 transition-shadow hover:shadow-md">
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-white">
-                  <Building2 size={20} />
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Enterprise SaaS</p>
-                <p className="mt-1 text-3xl font-black tracking-tighter text-slate-900">
-                  ${prices.enterprise}<span className="text-sm font-medium text-slate-400">/mo</span>
-                </p>
-                <p className="mt-3 text-xs text-slate-500 leading-relaxed">
-                  Unlimited job posts, full ATS CRM access, advanced filtering, and dedicated onboarding.
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* ══════════════════════════════════
-            2 · The Growth Flywheel
-        ══════════════════════════════════ */}
-        <motion.section custom={1} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
           <div className="rounded-2xl border border-slate-200/60 bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             <SectionLabel>Growth Engine</SectionLabel>
             <SectionHeading>The Flywheel Effect</SectionHeading>
@@ -205,9 +123,9 @@ function Strategy() {
         </motion.section>
 
         {/* ══════════════════════════════════
-            3 · Market Defensibility (The Moat)
+          2 · Market Defensibility (The Moat)
         ══════════════════════════════════ */}
-        <motion.section custom={2} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
+        <motion.section custom={1} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
           <div className="rounded-2xl border border-slate-200/60 bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             <SectionLabel>Competitive Advantage</SectionLabel>
             <SectionHeading>Market Defensibility</SectionHeading>
@@ -272,9 +190,9 @@ function Strategy() {
         </motion.section>
 
         {/* ══════════════════════════════════
-            4 · Unit Economics
+          3 · Unit Economics
         ══════════════════════════════════ */}
-        <motion.section custom={3} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
+        <motion.section custom={2} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
           <div className="rounded-2xl border border-slate-200/60 bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             <SectionLabel>Unit Economics · B2B Enterprise Tier</SectionLabel>
             <SectionHeading>CAC vs. LTV at Scale</SectionHeading>
@@ -343,9 +261,9 @@ function Strategy() {
         </motion.section>
 
         {/* ══════════════════════════════════
-            5 · Marketing Strategy
+          4 · Marketing Strategy
         ══════════════════════════════════ */}
-        <motion.section custom={4} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
+        <motion.section custom={3} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
           <div className="rounded-2xl border border-slate-200/60 bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             <SectionLabel>Go-To-Market</SectionLabel>
             <SectionHeading>Marketing Strategy</SectionHeading>
@@ -393,9 +311,9 @@ function Strategy() {
         </motion.section>
 
         {/* ══════════════════════════════════
-            6 · Interactive Growth Accelerator
+          5 · Interactive Growth Accelerator
         ══════════════════════════════════ */}
-        <motion.section custom={5} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
+        <motion.section custom={4} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
           <div className="rounded-2xl border border-slate-200/60 bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             <SectionLabel>Simulation Lab</SectionLabel>
             <SectionHeading>Growth Accelerator</SectionHeading>

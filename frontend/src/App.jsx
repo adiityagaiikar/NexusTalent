@@ -17,6 +17,7 @@ const Strategy = lazy(() => import('./pages/Strategy'));
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetails = lazy(() => import('./pages/ProductDetails'));
 const SystemIntelligence = lazy(() => import('./pages/SystemIntelligence'));
+const SupplyChainAnalytics = lazy(() => import('./pages/SupplyChainAnalytics'));
 const ApplicationTracker = lazy(() => import('./pages/ApplicationTracker'));
 const EmployerPricing = lazy(() => import('./pages/EmployerPricing'));
 const StudentUpgrade = lazy(() => import('./pages/StudentUpgrade'));
@@ -91,6 +92,7 @@ function App() {
               <Route path="strategy" element={<Strategy />} />
               <Route path="insights" element={<Insights />} />
               <Route path="system-intelligence" element={<SystemIntelligence />} />
+              <Route path="supply-chain-analytics" element={<SupplyChainAnalytics />} />
               <Route path="security" element={<SecurityCenter />} />
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>

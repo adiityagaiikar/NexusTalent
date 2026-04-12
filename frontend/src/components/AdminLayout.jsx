@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Briefcase, DollarSign, LayoutDashboard, Sparkles, Users, LogOut, Target, Shield } from '../constants/icons';
+import { DollarSign, LayoutDashboard, Sparkles, Users, LogOut, Target, Shield } from '../constants/icons';
 import NotificationCenter from './NotificationCenter';
 
 function AdminLayout() {
@@ -38,9 +38,6 @@ function AdminLayout() {
             <NavLink to="/admin/dashboard" className={itemClass}>
               <LayoutDashboard size={16} /> Hiring Dashboard
             </NavLink>
-            <NavLink to="/admin/products" className={itemClass}>
-              <Briefcase size={16} /> Products
-            </NavLink>
             <NavLink to="/admin/talent" className={itemClass}>
               <Users size={16} /> Talent Pool
             </NavLink>
@@ -52,6 +49,9 @@ function AdminLayout() {
             </NavLink>
             <NavLink to="/admin/system-intelligence" className={itemClass}>
               <Sparkles size={16} /> System Intelligence
+            </NavLink>
+            <NavLink to="/admin/supply-chain-analytics" className={itemClass}>
+              <Sparkles size={16} /> Supply Chain Analytics
             </NavLink>
             <NavLink to="/admin/security" className={itemClass}>
               <Shield size={16} /> Security

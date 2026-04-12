@@ -1,11 +1,6 @@
 import React from 'react';
 import {
   AlertTriangle,
-  Database,
-  Lock,
-  Shield,
-  ShieldCheck,
-  UserX,
 } from 'lucide-react';
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -16,28 +11,72 @@ const issueCategorizationData = [
   { category: 'Other', volume: 50 },
 ];
 
-const securityManifestCards = [
-  {
-    title: 'Encryption Layer',
-    icon: Lock,
-    copy: 'All sensitive user data, passwords, and transaction details are protected with industry-standard encryption at rest to safeguard records even if storage infrastructure is compromised.',
-  },
-  {
-    title: 'Data Validation & Sanitization',
-    icon: Database,
-    copy: 'Zero-tolerance input policy. Every incoming payload is strictly validated and sanitized to stop XSS (Cross-Site Scripting) and database injection attempts before data reaches the server.',
-  },
-  {
-    title: 'RBAC & Data Privacy',
-    icon: UserX,
-    copy: 'Role-Based Access Control (RBAC) governs every protected route and data surface. Personal information is shared only with explicit user consent under privacy-by-design policies.',
-  },
-  {
-    title: 'Defense in Depth',
-    icon: ShieldCheck,
-    copy: 'Layered controls combine transport security, authentication checks, and access monitoring to continuously enforce trust boundaries across the platform.',
-  },
-];
+function getPriorityLevel(volume) {
+  if (volume >= 500) return 'Critical';
+  if (volume >= 150) return 'High';
+  if (volume >= 75) return 'Medium';
+  return 'Low';
+}
+
+function buildRecommendedActions(data) {
+  return data.map(({ category, volume }) => {
+    const priority = getPriorityLevel(volume);
+
+    if (category === 'Payment System') {
+      return {
+        category,
+        volume,
+        priority,
+        owner: 'Payments + Backend Team',
+        actions: [
+          'Set a circuit breaker and fallback retry flow for payment provider outages.',
+          'Add transaction health alerts (error spikes, timeout thresholds, webhook failures).',
+          'Ship a user-facing failover message with auto-retry and incident status updates.',
+        ],
+      };
+    }
+
+    if (category === 'UI Bugs') {
+      return {
+        category,
+        volume,
+        priority,
+        owner: 'Frontend Team',
+        actions: [
+          'Create a bug triage queue by affected page and browser/device patterns.',
+          'Add visual regression checks on critical flows before each release.',
+          'Release hotfixes weekly and tag repeated issues for component-level refactor.',
+        ],
+      };
+    }
+
+    if (category === 'Login Issues') {
+      return {
+        category,
+        volume,
+        priority,
+        owner: 'Auth + Platform Team',
+        actions: [
+          'Track failed login reasons (invalid token, expiry, role mismatch) in auth logs.',
+          'Improve session refresh behavior and show guided recovery in the login UI.',
+          'Add lockout and suspicious-login alerting with self-service account recovery.',
+        ],
+      };
+    }
+
+    return {
+      category,
+      volume,
+      priority,
+      owner: 'Operations Team',
+      actions: [
+        'Cluster uncategorized reports with monthly review to identify emerging themes.',
+        'Convert repeated reports into backlog tickets with measurable SLA targets.',
+        'Close the loop by notifying users once the mapped issue is resolved.',
+      ],
+    };
+  });
+}
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
@@ -51,6 +90,8 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 function SystemIntelligence() {
+  const recommendedActions = buildRecommendedActions(issueCategorizationData);
+
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 md:px-8 lg:px-10">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
@@ -116,42 +157,54 @@ function SystemIntelligence() {
                 Automated NLP Analysis processed 1,000 recent customer reports. The system flagged a major critical issue: 700 of these reports mapped directly to 'Payment System Unresponsive.' Instead of manual review, this mapped data was automatically routed to the engineering pipeline. Status: Major issue identified and patch deployed.
               </p>
             </article>
+
+            <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.05)] md:p-8 lg:col-span-12">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <h3 className="text-lg font-black tracking-tighter text-slate-900 md:text-xl">Recommended Actions</h3>
+                <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-indigo-700">
+                  Data-driven response plan
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                {recommendedActions.map((item) => (
+                  <article key={item.category} className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 md:p-4">
+                    <div className="mb-2.5 flex flex-wrap items-center gap-2">
+                      <p className="text-sm font-black tracking-tight text-slate-900">{item.category}</p>
+                      <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-600 border border-slate-200">
+                        {item.volume} reports
+                      </span>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
+                          item.priority === 'Critical'
+                            ? 'bg-rose-100 text-rose-700'
+                            : item.priority === 'High'
+                            ? 'bg-amber-100 text-amber-700'
+                            : item.priority === 'Medium'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-emerald-100 text-emerald-700'
+                        }`}
+                      >
+                        {item.priority} Priority
+                      </span>
+                    </div>
+
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-slate-500">Owner: {item.owner}</p>
+                    <ul className="space-y-1.5 text-sm text-slate-600">
+                      {item.actions.map((action) => (
+                        <li key={action} className="flex gap-2">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-500" />
+                          <span>{action}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+            </article>
           </div>
         </section>
 
-        <section className="space-y-5">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-black tracking-tighter text-slate-900 md:text-4xl">Platform Security Practices</h2>
-            <p className="max-w-3xl text-sm font-medium leading-relaxed text-slate-500 md:text-base">
-              These cards expose the invisible backend security layers that protect identity, transactions, and personal data throughout the platform lifecycle.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {securityManifestCards.map(({ title, icon: Icon, copy }) => (
-              <article
-                key={title}
-                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.05)] md:p-7"
-              >
-                <div className="mb-4 inline-flex rounded-2xl border border-slate-200 bg-slate-50 p-3 text-indigo-600">
-                  <Icon size={20} />
-                </div>
-                <h3 className="mb-2 text-xl font-black tracking-tighter text-slate-900">{title}</h3>
-                <p className="text-sm font-medium leading-relaxed text-slate-600">{copy}</p>
-              </article>
-            ))}
-          </div>
-
-          <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.05)] md:p-7">
-            <div className="mb-4 inline-flex rounded-2xl border border-slate-200 bg-slate-50 p-3 text-indigo-600">
-              <Shield size={20} />
-            </div>
-            <h3 className="mb-2 text-xl font-black tracking-tighter text-slate-900">Transparent Security Manifest</h3>
-            <p className="text-sm font-medium leading-relaxed text-slate-600">
-              This dashboard explicitly communicates backend trust mechanisms for evaluators, showing how CRM intelligence and zero-trust controls work together in a production-style SaaS architecture.
-            </p>
-          </article>
-        </section>
       </div>
     </div>
   );
