@@ -125,7 +125,7 @@ function SupplyChainAnalytics() {
             </span>
           </div>
 
-          <div className="h-85 w-full">
+          <div className="w-full" style={{ height: '340px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={pipelineVelocityData} margin={{ top: 24, right: 220, left: 0, bottom: 14 }}>
                 <defs>

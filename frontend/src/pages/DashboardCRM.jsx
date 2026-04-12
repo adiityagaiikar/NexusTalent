@@ -662,7 +662,9 @@ function DashboardCRM() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-100 bg-slate-900/45 p-4"
+              // eslint-disable-next-line tailwindcss/no-unnecessary-arbitrary-value
+              className="fixed inset-0 bg-slate-900/45 p-4"
+              style={{ zIndex: 100 }}
               onClick={() => setCheckoutJob(null)}
             >
               <div className="flex min-h-dvh items-center justify-center">
