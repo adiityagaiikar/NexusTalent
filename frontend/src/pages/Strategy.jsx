@@ -623,7 +623,7 @@ function Strategy() {
       </div>
 
       {activeTaskConfig && createPortal(
-        <div className="fixed inset-0 z-[100] bg-slate-900/25" onClick={closeTaskModal}>
+        <div className="fixed inset-0 z-100 bg-slate-900/25" onClick={closeTaskModal}>
           <div className="flex min-h-dvh items-center justify-center p-4">
             <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl" onClick={(event) => event.stopPropagation()}>
               <h3 className="text-lg font-black tracking-tight text-slate-900">{activeTaskConfig.title}</h3>

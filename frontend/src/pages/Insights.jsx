@@ -46,7 +46,7 @@ function Insights() {
           { icon: <Globe />, title: "Remote Adoption", val: "72% Adoption", desc: "Companies transitioning to hybrid." },
           { icon: <MousePointer2 />, title: "Avg. Response", val: "4.2 Hours", desc: "Top talent responds within 5 hours." }
         ].map((item, i) => (
-          <div key={i} className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:border-blue-500 transition-all group">
+          <div key={i} className="bg-white p-8 rounded-4xl border border-gray-100 shadow-sm hover:border-blue-500 transition-all group">
             <div className="w-12 h-12 bg-gray-50 text-gray-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
               {item.icon}
             </div>
